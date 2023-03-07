@@ -1,0 +1,279 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: powered by Flasgger
+  version: 1.0.11
+servers:
+  - url: http://127.0.0.1:8000/api
+    variables: {}
+tags:
+  - name: auth
+  - name: hotels
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: 회원 가입 API
+      requestBody:
+        description: 회원가입 양식
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: abc123@abc.com
+                name:
+                  type: string
+                  example: sjahn
+                password:
+                  type: string
+                  example: rewq1234
+                password_confirmation:
+                  type: string
+                  example: rewq1234
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad Request
+        '404':
+          description: Page Not Found
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: 로그인 API
+      requestBody:
+        description: 로그인 양식
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: abc123@abc.com
+                password:
+                  type: string
+                  example: rewq1234
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad Request
+        '404':
+          description: Page Not Found
+  /auth/me:
+    get:
+      tags:
+        - auth
+      summary: 현재 사용자 정보 조회 API
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad Request
+        '404':
+          description: Page Not Found
+      security:
+        - bearerAuth: []
+  /auth/logout:
+    delete:
+      tags:
+        - auth
+      summary: 로그아웃 API
+      responses:
+        '204':
+          description: Successful operation
+        '404':
+          description: Page Not Found
+      security:
+        - bearerAuth: []
+  /hotels:
+    get:
+      tags:
+        - hotels
+      summary: 호텔 목록 API
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Page Not Found
+    post:
+      tags:
+        - hotels
+      summary: 호텔 등록 API (user.is_admin == true 필요)
+      requestBody:
+        description: 로그인 양식
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Hotel ABC123
+                count:
+                  type: integer
+                  example: 3
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Bad Request
+        '404':
+          description: Page Not Found
+      security:
+        - bearerAuth: []
+  /hotels/{id}:
+    get:
+      tags:
+        - hotels
+      summary: 호텔 상세 API
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Page Not Found
+    put:
+      tags:
+        - hotels
+      summary: 호텔 수정 API (user.is_admin == true 필요)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Hotel ABC123
+                count:
+                  type: integer
+                  example: 3
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Page Not Found
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - hotels
+      summary: 호텔 삭제 API (user.is_admin == true 필요)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Successful operation
+        '404':
+          description: Page Not Found
+      security:
+        - bearerAuth: []
+  /hotels/{id}/reservation:
+    post:
+      tags:
+        - hotels
+      summary: 호텔 예약 API
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Page Not Found
+      security:
+        - bearerAuth: []
+  /hotels/{id}/proposes:
+    get:
+      tags:
+        - hotels
+      summary: 호텔 예약 목록 API (user.is_admin == true 필요)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Page Not Found
+      security:
+        - bearerAuth: []
+  /hotels/{id}/approve/{resevationId}:
+    patch:
+      tags:
+        - hotels
+      summary: 호텔 예약 승인 처리 API (user.is_admin == true 필요)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: resevationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [RESERVED, REFUSE]
+                  example: RESERVED
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Page Not Found
+      security:
+        - bearerAuth: []
