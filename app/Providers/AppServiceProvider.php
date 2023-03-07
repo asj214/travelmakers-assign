@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,9 +20,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        // $this->registerPolicies();
-        Gate::define('isAdmin', function($user){
-            return $user->is_admin == true;
-        });
     }
 }
