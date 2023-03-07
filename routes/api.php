@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\HotelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,17 @@ Route::prefix('auth')->group(function(){
     Route::delete('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
 });
+
+/*
+Route::group(['middleware' => ['auth:sanctum']], function ($router) {
+    Route::get('hotels', [HotelController::class, 'index'])->withoutMiddleware('auth:sanctum');
+    Route::post('hotels', [HotelController::class, 'store']);
+    Route::get('hotels/{id}', [HotelController::class, 'show'])->withoutMiddleware('auth:sanctum');
+    Route::put('hotels/{id}', [HotelController::class, 'update']);
+    Route::delete('hotels/{id}', [HotelController::class, 'destroy']);
+
+    // Route::apiResource('hotels', HotelController::class);
+});
+*/
+
+Route::apiResource('hotels', HotelController::class);

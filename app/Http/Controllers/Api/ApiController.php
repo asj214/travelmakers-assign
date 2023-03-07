@@ -33,6 +33,11 @@ class ApiController extends Controller
         return $this->respondError($message, 404);
     }
 
+    protected function respondForbidden($message = 'Forbidden')
+    {
+        return $this->respondError($message, 403);
+    }
+
     protected function respondBadRequest($message = 'BadRequest')
     {
         return $this->respondError($message, 400);

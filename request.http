@@ -37,3 +37,52 @@ Authorization: Bearer {{access_token}}
 DELETE {{BASE_URL}}/auth/logout
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
+
+
+###
+# hotels.list
+GET {{BASE_URL}}/hotels?page=2
+Accept: application/json
+Content-Type: application/json
+
+
+###
+# Authorization: Bearer {{access_token}}
+
+
+###
+# hotels.create
+POST {{BASE_URL}}/hotels
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "name": "Hotel ABC",
+    "count": 3
+}
+
+###
+# hotels.show
+GET {{BASE_URL}}/hotels/21
+Accept: application/json
+Content-Type: application/json
+
+###
+# hotels.update
+PUT {{BASE_URL}}/hotels/21
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "name": "Hotel ABCD",
+    "count": 3
+}
+
+###
+# hotels.destroy
+DELETE {{BASE_URL}}/hotels/23
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
