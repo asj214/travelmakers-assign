@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Http\Resources\HotelResource;
 use App\Http\Resources\HotelCollection;
@@ -13,7 +14,8 @@ class HotelController extends ApiController
 {
     public function __construct()
     {
-        $this->middleware(['auth:sanctum', 'can:isAdmin'])->except(['index', 'show']);
+        // 
+        $this->middleware(['auth:sanctum', 'can:isAdmin'])->except(['index', 'show', 'reservation']);
     }
 
     /**
@@ -22,8 +24,7 @@ class HotelController extends ApiController
     public function index()
     {
         //
-        return new HotelCollection(Hotel::paginate(15));
-        return $this->respond(new HotelCollection(Hotel::paginate(15)));
+        return new HotelCollection(Hotel::orderBy('id', 'desc')->paginate(15));
     }
 
     /**
@@ -54,7 +55,8 @@ class HotelController extends ApiController
     public function show(string $id)
     {
         //
-        return $this->respond(new HotelResource(Hotel::findOrFail($id)));
+        $hotel = Hotel::with('reservations')->findOrFail($id);
+        return $this->respond(new HotelResource($hotel));
     }
 
     /**
@@ -75,7 +77,7 @@ class HotelController extends ApiController
         $hotel->count = $request->input('count');
         $hotel->save();
 
-        return $this->respond(new HotelResource($hotel));
+        return $this->show($hotel->id);
     }
 
     /**
@@ -88,5 +90,48 @@ class HotelController extends ApiController
         $hotel->delete();
 
         return $this->respondNoContent();
+    }
+
+    public function reservation(Request $request, string $id)
+    {
+        //
+        $hotel = Hotel::with('reservations')->findOrFail($id);
+        if (count($hotel->reservations) >= $hotel->count) {
+            return $this->respondBadRequest('SOLD OUT');
+        }
+
+        $hotel->reservations()->create([
+            'status' => config('constants.hotel.PROPOSE'),
+            'user_id' => auth()->user()->id,
+        ]);
+
+        return $this->show($hotel->id);
+    }
+
+    public function proposes(Request $request, string $id)
+    {
+        //
+        $hotel = Hotel::with('proposes')->findOrFail($id);
+        return $this->respond(new HotelResource($hotel));
+    }
+
+    public function approve(Request $request, string $id, $resevationId)
+    {
+        //
+        $validate = Validator::make($request->all(), [
+            'status' => [
+                'required',
+                'string',
+                Rule::in(array_values(config('constants.hotel')))
+            ]
+        ]);
+        if ($validate->fails()) return $this->respondBadRequest($validate->errors());
+
+        $hotel = Hotel::findOrFail($id);
+        $propose = $hotel->proposes()->findOrFail($resevationId);
+        $propose->status = $request->input('status');
+        $propose->save();
+
+        return $this->show($hotel->id);
     }
 }

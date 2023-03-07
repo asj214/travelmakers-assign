@@ -53,7 +53,6 @@ Content-Type: application/json
 ###
 # hotels.create
 POST {{BASE_URL}}/hotels
-Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
@@ -67,6 +66,7 @@ Authorization: Bearer {{access_token}}
 GET {{BASE_URL}}/hotels/21
 Accept: application/json
 Content-Type: application/json
+
 
 ###
 # hotels.update
@@ -86,3 +86,32 @@ DELETE {{BASE_URL}}/hotels/23
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
+
+
+
+###
+# hotels.reservation
+POST {{BASE_URL}}/hotels/21/reservation
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+
+###
+# hotels.proposes
+GET {{BASE_URL}}/hotels/21/proposes
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+
+###
+# hotels.approve
+PATCH {{BASE_URL}}/hotels/21/approve/6
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "status": "RESERVED"
+}

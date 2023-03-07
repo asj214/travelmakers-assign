@@ -40,3 +40,6 @@ Route::group(['middleware' => ['auth:sanctum']], function ($router) {
 */
 
 Route::apiResource('hotels', HotelController::class);
+Route::post('hotels/{id}/reservation', [HotelController::class, 'reservation']);
+Route::get('hotels/{id}/proposes', [HotelController::class, 'proposes']);
+Route::patch('hotels/{id}/approve/{resevationId}', [HotelController::class, 'approve']);
