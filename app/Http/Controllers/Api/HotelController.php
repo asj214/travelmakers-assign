@@ -13,7 +13,7 @@ class HotelController extends ApiController
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except(['index', 'show']);
+        $this->middleware(['auth:sanctum', 'can:isAdmin'])->except(['index', 'show']);
     }
 
     /**
@@ -32,8 +32,6 @@ class HotelController extends ApiController
     public function store(Request $request)
     {
         //
-        if (!auth()->user()->is_admin) return $this->respondForbidden();
-
         $validate = Validator::make($request->all(), [
             'name' => ['required', 'string'],
             'count' => ['required', 'integer'],
