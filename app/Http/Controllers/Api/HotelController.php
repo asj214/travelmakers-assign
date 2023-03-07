@@ -24,7 +24,7 @@ class HotelController extends ApiController
     public function index()
     {
         //
-        return new HotelCollection(Hotel::orderBy('id', 'desc')->paginate(15));
+        return new HotelCollection(Hotel::with('reservations')->orderBy('id', 'desc')->paginate(15));
     }
 
     /**

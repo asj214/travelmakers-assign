@@ -20,14 +20,17 @@ class HotelResource extends JsonResource
             'count' => $this->count,
             'status' => (function () {
                 $ret = config('constants.hotel.NORMAL');
-                if ($this->count <= count($this->reservations)) {
+                if (!$this->relationLoaded('reservations')) return $ret;
+                if ($this->count <= $this->reservations->count()) {
                     $ret = config('constants.hotel.SOLDOUT');
                 }
                 return $ret;
             })(),
             'reserved_count' => $this->when(
-                $this->reservations,
-                count($this->whenLoaded('reservations'))
+                $this->relationLoaded('reservations'),
+                function () {
+                    return $this->reservations->count();
+                }
             ),
             'reservations' => HotelReservationResource::collection(
                 $this->whenLoaded('reservations')

@@ -91,7 +91,7 @@ Authorization: Bearer {{access_token}}
 
 ###
 # hotels.reservation
-POST {{BASE_URL}}/hotels/21/reservation
+POST {{BASE_URL}}/hotels/17/reservation
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -99,7 +99,7 @@ Authorization: Bearer {{access_token}}
 
 ###
 # hotels.proposes
-GET {{BASE_URL}}/hotels/21/proposes
+GET {{BASE_URL}}/hotels/17/proposes
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
