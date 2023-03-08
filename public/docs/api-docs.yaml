@@ -62,7 +62,7 @@ paths:
               properties:
                 email:
                   type: string
-                  example: abc123@abc.com
+                  example: asj214@naver.com
                 password:
                   type: string
                   example: rewq1234
